@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<style>
+    .gradient-custom {
+        background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
+        linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
+        linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
+        radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
+        radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
+        background-blend-mode: screen, color-dodge, overlay, difference, normal;
+    }
+</style>
+<body>
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card rounded-3">
+                    <div class="card-body p-4">
+
+                        <h4 class="text-center my-3 pb-3">To Do App</h4>
+
+                        <div class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
+                            <div class="col-12">
+                                <div class="form-outline">
+                                    <input type="text" id="form1" class="form-control" />
+                                    <label class="form-label" for="form1">일정을 등록해 주세요</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary">Save</button>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="button" class="btn btn-warning" id="select-todo-btn">Get tasks</button>
+                            </div>
+                        </div>
+
+                        <table class="table mb-4" id="todoTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Todo item</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Buy groceries for next week</td>
+                                <td>In progress</td>
+                                <td>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-success ms-1">Finished</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Renew car insurance</td>
+                                <td>In progress</td>
+                                <td>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-success ms-1">Finished</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Sign up for online course</td>
+                                <td>In progress</td>
+                                <td>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-success ms-1">Finished</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="/js/scripts.js"></script>
+<script>
+    async function fetchData() {
+
+        const apiUrl = "http://localhost:8080/todo/list";
+
+        try {
+            const response = await fetch(apiUrl)
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data);
+
+            dataListAddAction(data)
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
+    function dataListAddAction(data){
+        const tableBody = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
+
+        // 기존 테이블 내용 삭제
+        tableBody.innerHTML = '';
+
+        data.forEach((todo, index) => {
+            // 테이블에 데이터 추가
+
+            // 기존 테이블 내용 삭제
+            tableBody.innerHTML = '';
+
+            data.forEach((todo) => {
+
+                /*
+                    var table = document.createElement('table');
+                    var row = table.insertRow(0);  // 첫 번째 행 추가
+
+                    var cell1 = row.insertCell(0);  // 첫 번째 셀 추가
+                    cell1.innerHTML = 'Cell 1';
+
+                    var cell2 = row.insertCell(1);  // 두 번째 셀 추가
+                    cell2.innerHTML = 'Cell 2';
+                 */
+
+                const row = tableBody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+
+                cell1.innerHTML = ''; // 적절한 내용으로 채우세요
+                cell2.innerHTML = todo.title;
+                cell3.innerHTML = todo.status;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.addEventListener('click', () => deleteTodo(todo.id));
+
+                const finishButton = document.createElement('button');
+                finishButton.innerText = 'Finished';
+                finishButton.className = 'btn btn-success ms-1';
+                finishButton.addEventListener('click', () => finishTodo(todo.id));
+
+                cell4.appendChild(deleteButton);
+                cell4.appendChild(finishButton);
+            });
+
+
+        });
+    }
+    function deleteTodo(todoId) {
+        // TODO: 삭제 로직 추가 (todoId 활용)
+        console.log('Delete todo with ID:', todoId);
+    }
+
+    function finishTodo(todoId) {
+        // TODO: 완료 로직 추가 (todoId 활용)
+        console.log('Finish todo with ID:', todoId);
+    }
+
+    fetchData();
+
+
+</script>
+</html>

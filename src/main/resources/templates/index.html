@@ -34,7 +34,7 @@
                             </div>
 
                             <div class="col-12">
-                                <button type="button" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-primary" onclick="sendToDoData()">Save</button>
                             </div>
 
                             <div class="col-12">
@@ -110,7 +110,31 @@
             console.error('There was a problem with the fetch operation:', error);
         }
     }
+    function sendToDoData(){
+        let data = {
+            id : null,
+            title : document.getElementById("form1").value,
+            status : "진행중"
+        }
 
+        fetch("http://localhost:8080/todo/list",{
+            method : "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body : JSON.stringify(data)
+        })
+            .then(response  => {
+                return response.json()
+            })
+            .then(data => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.error("Error:", error)
+            })
+    }
     function dataListAddAction(data){
         const tableBody = document.getElementById('todoTable').getElementsByTagName('tbody')[0];
 

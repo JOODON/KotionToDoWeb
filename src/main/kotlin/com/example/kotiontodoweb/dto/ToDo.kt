@@ -2,12 +2,12 @@ package com.example.kotiontodoweb.dto
 
 
 
-class ToDo(title : String ,status : String , id : Long) {
+class ToDo(
 
-    var id : Long = id
+    val title: String,
 
-    var title : String = title
+    val status: String,
 
-    var status : String = status
+    val id: Long
 
-}
+)
